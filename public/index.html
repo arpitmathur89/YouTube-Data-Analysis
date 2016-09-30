@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>YouTube</title>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+	<script src ="js/searchapi.js"></script>
+</head>
+
+<body>
+    <form id="youtube search form" action="javascript:clickedSearchButton()">
+		<table id="searchDisplay">
+          <tr>
+            <td>&nbsp;&nbsp;&nbsp;</td>
+            <td id="timeframeLabel">Time Frame</td>
+          </tr>
+          <tr>
+            <td>&nbsp;&nbsp;&nbsp;</td>
+            <td>
+              <select id='timeWindow'>
+                <option value="any" selected="selected">Any Time</option>
+                <option value="hour">Past Hour</option>
+                <option value="3hours">Past 3 Hours</option>
+                <option value="6hours">Past 6 Hours</option>
+                <option value="9hours">Past 9 Hours</option>
+                <option value="12hours">Past 12 Hours</option>
+                <option value="24hours">Past 24 Hours</option>
+                <option value="week">Past Week</option>
+                <option value="30days">Past 30 days</option>
+              </select>
+            </td>
+            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td>
+              <input id="search-button" type="submit" value="Search">
+            </td>
+          </tr>
+		</table>
+	</form>
+</body>
+
+</html>
