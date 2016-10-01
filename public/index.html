@@ -9,7 +9,9 @@
 </head>
 
 <body>
-    <form id="youtube search form" action="javascript:clickedSearchButton()">
+    <form id="youtube search form" action="javascript:clickedSearchButton()" >
+	<!--action="javascript:clickedSearchButton()">
+	action="http://localhost:8080/process_post" method = "GET"-->
 		<table id="searchDisplay">
           <tr>
             <td>&nbsp;&nbsp;&nbsp;</td>
@@ -32,11 +34,17 @@
             </td>
             <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
             <td>
-              <input id="search-button" type="submit" value="Search">
+				<!--<button onclick="clickedSearchButton()">Get new Data</button>-->
+               <input id="search-button" type="submit" value="Get New Data">
             </td>
           </tr>
+		  <tr>
+			<!--<input id='mydata' name="mydata" value='avc' >-->
+		  </tr>
 		</table>
+		
 	</form>
+	
 </body>
 
 </html>
