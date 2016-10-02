@@ -28,12 +28,13 @@ app.get('/endpoint',function(req,res){
 
          youtubeData = JSON.parse( queryObj.jsonData );
 	console.log(youtubeData);
-	res.send("successfully received at server side");
-	var fields = ['videoId', 'duration', 'viewCount' , 'commentCount'];
+	//res.send("success");
+	var fields = ['videoId', 'categoryId' , 'category', 'duration', 'viewCount' , 'commentCount' ];
 	var csv = json2csv({ data: youtubeData, fields: fields });
 	fs.writeFile('file.csv', csv, function(err){
 	if (err) throw err;
 	  console.log('file saved');
+	  res.send("success");
 	});	
 });
 server.listen(8080);
