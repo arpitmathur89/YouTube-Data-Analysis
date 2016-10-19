@@ -5,13 +5,12 @@
     <title>YouTube</title>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-	<script src ="js/searchapi.js"></script>
+	<!--<script src ="js/searchapi.js"></script>-->
 </head>
 
 <body>
-    <form id="youtube search form" action="javascript:clickedSearchButton()" >
-	<!--action="javascript:clickedSearchButton()">
-	action="http://localhost:8080/process_post" method = "GET"-->
+    <form method="post" action="/">
+	<!--id="youtube search form" action="javascript:clickedSearchButton()" -->
 		<table id="searchDisplay">
           <tr>
             <td>&nbsp;&nbsp;&nbsp;</td>
@@ -34,7 +33,12 @@
             </td>
             <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
             <td>
-               <input id="search-button" type="submit" value="Get New Data">
+               <input id="search-button" type="button" value="Get New Data">
+			   <script>
+			   $('#search-button').click(function(){
+				$.post('/click');
+				});
+			   </script>
             </td>
           </tr>
 		</table>
