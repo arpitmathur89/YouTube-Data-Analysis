@@ -6,7 +6,7 @@ var path = require('path');
 var fs = require('fs');
 var json2csv = require('json2csv');
 var url = require( "url" );
-var queryString = require( "querystring" );
+var qs = require( "querystring" );
 var youtubeData = {};
 app.use(express.static(__dirname + '/public'));
 
@@ -20,9 +20,24 @@ app.get('/index.html', function(req, res){
 
 
 app.post('/click', function(req, res) {
-  console.log("Clicked search button");
-  searchapi.clickedSearchButton();
- 
+
+  var body ='';
+  req.on('data',function(data){
+	  
+	  body += data;
+	  if (body.length > 1e6) { 
+                // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
+                req.connection.destroy();
+            }
+  });
+  req.on('end', function () {
+
+            var Mydata = qs.parse(body);
+			var time = Mydata.timeframe;
+			searchapi.clickedSearchButton(time,function(done){
+				res.send("success");
+			});
+  });
 });
 
 app.post('/endpoint',function(req,res){

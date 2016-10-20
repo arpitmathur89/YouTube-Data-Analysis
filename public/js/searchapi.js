@@ -1,51 +1,44 @@
 var youtube = require('youtube-api');
 var async = require('async');
+var fs = require('fs');
+var json2csv = require('json2csv');
 var finalResults = [];
 var finalResults2 = [];
 var totalResults = '';
 var inputObject = {};
 var count = 0;
-//var client = require('https://apis.google.com/js/client.js?onload=onClientLoad');
 var publishAfterTime = '';
 var publishBeforeTime = '';
 
 var API_ACCESS_KEY = 'AIzaSyD93zoVXfwOKmkxMFU0LWKvkdzQMdm1yOk';
 
 var nextPageToken;
-/*
-$(document).ready(function() {
-	
-  $.getScript('https://apis.google.com/js/client.js?onload=onClientLoad');
-});
 
-function onClientLoad() {
-	gapi.client.load('youtube', 'v3', onYouTubeApiLoad);		
-}
-
-function onYouTubeApiLoad() {
-
-	gapi.client.setApiKey(API_ACCESS_KEY);
-	
-}
-*/
-exports.clickedSearchButton = function(){
+exports.clickedSearchButton = function(time,done){
 
 	youtube.authenticate({
     type: 'key',
     key: API_ACCESS_KEY,
   });
 	finalResults = [];
-    search();
+	finalResults2 = [];
+	count = 0;
+	inputObject = {};
+	inputObject.inputTimeWindow = time;
+    search(null,done);
 	
 }
 
-function search(pageToken) {
+function search(pageToken,mycall) {
 	
+	getPublishBeforeAndAfterTime();
 	var requestOptions = {
 		type: 'playlist',
 		part: 'snippet',
 		q: '',
 		maxResults: '50',
+		publishedAfter: publishAfterTime,
+        publishedBefore: publishBeforeTime
 	}
 	if (pageToken) {
 		requestOptions.pageToken = pageToken;
@@ -65,12 +58,12 @@ function search(pageToken) {
 		}
 		console.log("Got this many id's :" + finalResults.length);
 		if(nextPageToken){
-			search(nextPageToken);
+			search(nextPageToken,mycall);
 		}else{
-			console.log("Total videos recieved are :" + finalResults.length);
 			getVideoDetails(function(data){
 				console.log("Total data came : " + data.length);
-				console.log("after get videos");
+				displayfinalResults();
+				mycall("success");
 			});
 		}		
 	});		  
@@ -80,20 +73,9 @@ var finalResults3 = [];
 
 function getVideoDetails(callback){
 	
-	/*var operations = [];
-	for(var i =0 ;i<10;i++){
-		operations.push(playlistInfoRecursive(finalResults[i].playlistId, null,i,callback));
-	}*/	
-	/*
-	for(var i=0;i<10;i++){
-		(playlistInfoRecursive(finalResults[i].playlistId, null,i,callback));	
-		//console.log(i);
-		test(i);
-	}
-	*/
 	var i =0 ;
 	async.whilst(
-	function(){ return i<15;},
+	function(){ return i<5;},
 	function(cback){playlistInfoRecursive(finalResults[i].playlistId, null,i,finalResults2,callback,cback);
 	i++;},
 	function(err,done){
@@ -116,9 +98,9 @@ function playlistInfoRecursive(playlistId,pageToken,num,finalResults2,callback,c
 	  var videoIDString = '';
 	  var playlistNextPageToken = response.nextPageToken;
 	  async.each(response.items,function(data){
-		  //count++;
 		  var videoResult = new Object();
 		  videoResult.videoId = data.snippet.resourceId.videoId;
+		  videoResult.channelId = data.snippet.channelId;
 		  videoIDString = videoIDString + videoResult.videoId + ",";
 		  videoArr.push(videoResult);
 	  });
@@ -130,7 +112,6 @@ function playlistInfoRecursive(playlistId,pageToken,num,finalResults2,callback,c
         part: 'snippet,id,contentDetails,statistics',
         key: API_ACCESS_KEY
       },function(err,response){
-		  console.log("Getting Durations ");
 		  var categoryIDString = '';
 		  async.each(response.items, function(videodata) {
 			var videoRequestVideoId = videodata.id;
@@ -151,7 +132,6 @@ function playlistInfoRecursive(playlistId,pageToken,num,finalResults2,callback,c
         part: 'snippet',
         key: API_ACCESS_KEY
       },function(err,response){
-		  console.log("Getting Category title ");
 		  async.each(response.items, function(categdata) {
 			var videocategRequestcategoryId = categdata.id;
 			  for (var i = 0; i < videoArr.length; i++) {
@@ -163,50 +143,104 @@ function playlistInfoRecursive(playlistId,pageToken,num,finalResults2,callback,c
 					//
 				}
 			  }
-			  console.log("Lenght aayi: " + finalResults2.length);
 		  });
-	/*	for(var i=0;i<videoArr.length;i++){
-			count++;  
-            finalResults2.push(videoArr[i]);
-			}*/
-		//
-			console.log("Num is : " + num);
+	
 	
 	  if(playlistNextPageToken){
 		  playlistInfoRecursive(playlistId,playlistNextPageToken,num,finalResults2,callback,cback);
-	  }else if(!playlistNextPageToken && (num == 14)){
-		  console.log(finalResults2.length);
+	  }else if(!playlistNextPageToken && (num == 4)){
 		  callback(finalResults2);
 		  cback();
-		  
-		 //console.log("Next playlist call");	 
+		  	 
 	  }else{
 		  console.log("Next playlist call :" + count);
 		  cback();
 	  }	
-		//	
 	  });  
 	  });	  
-		  
-	  
-	  
-	/*  for(var i=0;i<videoArr.length;i++){
-			count++;  
-            finalResults2.push(videoArr[i]);
-			}
-			*/
-	/*	console.log("Num is : " + num);
-	
-	  if(playlistNextPageToken){
-		  playlistInfoRecursive(playlistId,playlistNextPageToken,num,finalResults2,callback,cback);
-	  }else if(!playlistNextPageToken && (num == 9)){
-		  callback(finalResults2);
-		  cback();
-		  
-		 //console.log("Next playlist call");	 
-	  }else{
-		  console.log("Next playlist call :" + count);
-		  cback();
-	  }	*/	  	  
+		    	  
   });
+}
+
+function displayfinalResults(){
+	var datajson = JSON.stringify(finalResults2);
+	var youtubeData = JSON.parse( datajson );
+	
+	var fields = ['videoId','categoryId' , 'category', 'duration', 'viewCount' , 'commentCount', 'channelId' ];
+		var csv = json2csv({ data: youtubeData, fields: fields });
+		fs.writeFile('outputfile.csv', csv, function(err){
+			if (err) throw err;
+			  console.log('file saved');
+			});	
+
+}
+
+/**  This function takes a date object and returns a UTC formatted date string
+ *  @param {object} - Date object
+ *  @return {string} - String with the date in UTC format
+ */
+function convertDateToTimeDateStamp(dateObj) {
+  return dateObj.getUTCFullYear() + '-' + formatAsTwoDigitNumber(dateObj.getUTCMonth() + 1) + '-' + formatAsTwoDigitNumber(dateObj.getUTCDate()) + 'T' + formatAsTwoDigitNumber(dateObj.getUTCHours()) + ':' + formatAsTwoDigitNumber(dateObj.getUTCMinutes()) + ':' + formatAsTwoDigitNumber(dateObj.getUTCSeconds()) + 'Z';
+}
+
+/**  This function takes a number and returns its two digital string equivalent
+ *  @param {number} - number to be converted
+ *  @return {string} - number represented as a two digit string
+ */
+function formatAsTwoDigitNumber(numb) {
+  if (numb < 10) {
+    return String('0' + numb);
+  } else {
+    return String(numb);
+  }
+}
+
+/**  This function calculates the before and after timestamps needed for the API search and stores them in global variables
+ */
+function getPublishBeforeAndAfterTime() {
+  
+  //Time comes from drop down option, convert to UTC format
+   
+    var nowTime_TimeStamp = convertDateToTimeDateStamp(new Date())
+    var nowTimeMilliSecs = new Date().getTime();
+
+    //if publishBeforeTime is blank or the user clicked the search button then
+    //set publishBeforeTime to current time.  Otherwise we want to use the value
+    //from the URL parameter
+    
+      publishBeforeTime = nowTime_TimeStamp;
+    
+
+    //define the before time in milliseconds by subtracting time window from the time right now
+    var thresholdTime = 0;
+
+    numberMilliSecondsInHour = 1000 * 60 * 60;
+    if (inputObject.inputTimeWindow === 'hour') {
+      thresholdTime = nowTimeMilliSecs - numberMilliSecondsInHour;
+    } else if (inputObject.inputTimeWindow === '3hours') {
+      thresholdTime = nowTimeMilliSecs - (3 * numberMilliSecondsInHour);
+    } else if (inputObject.inputTimeWindow === '6hours') {
+      thresholdTime = nowTimeMilliSecs - (6 * numberMilliSecondsInHour);
+    } else if (inputObject.inputTimeWindow === '9hours') {
+      thresholdTime = nowTimeMilliSecs - (9 * numberMilliSecondsInHour);
+    } else if (inputObject.inputTimeWindow === '12hours') {
+      thresholdTime = nowTimeMilliSecs - (12 * numberMilliSecondsInHour);
+    } else if (inputObject.inputTimeWindow === '24hours') {
+      thresholdTime = nowTimeMilliSecs - (24 * numberMilliSecondsInHour);
+    } else if (inputObject.inputTimeWindow === 'week') {
+      thresholdTime = nowTimeMilliSecs - (24 * 7 * numberMilliSecondsInHour);
+    } else if (inputObject.inputTimeWindow === '30days') {
+      thresholdTime = nowTimeMilliSecs - (24 * 30 * numberMilliSecondsInHour);
+    } else if (inputObject.inputTimeWindow === 'year') {
+      thresholdTime = nowTimeMilliSecs - (24 * 365.25 * numberMilliSecondsInHour);
+    } else {
+      thresholdTime = 0
+    }
+
+    //if threshold time is 0 then set before to epoch
+    if (thresholdTime === 0) {
+      publishAfterTime = '1970-01-01T00:00:00Z';
+    } else {
+      publishAfterTime = convertDateToTimeDateStamp(new Date(thresholdTime));
+    } 
 }

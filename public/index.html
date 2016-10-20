@@ -36,7 +36,25 @@
                <input id="search-button" type="button" value="Get New Data">
 			   <script>
 			   $('#search-button').click(function(){
-				$.post('/click');
+				var timeframe = $('#timeWindow').val();
+				console.log(timeframe);
+				$.ajax({
+					type: 'POST',
+					url: '/click',
+					data : timeframe,
+					beforeSend : function(){
+								document.getElementById("myDIV").innerHTML = "Loading ...";
+								
+								},  
+					complete : function(validationResponse){
+									console.log("Response came back " + validationResponse.responseText);
+									if(validationResponse.responseText =="success"){
+										document.getElementById("myDIV").innerHTML = "Data Saved into file";
+									}else{
+										document.getElementById("myDIV").innerHTML = "Some error occured !! Please try again";
+									}
+								}
+				});
 				});
 			   </script>
             </td>
