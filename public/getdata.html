@@ -6,11 +6,11 @@
 -->
 <html>
 	<head>
-		<title>YouTube Data Analysis by Team Inferno</title>
+		<title>Get Data - YouTube Data Analysis</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script> 
 		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<!--<script src ="assets/js/helper.js"></script>-->
@@ -34,18 +34,77 @@
 									</ul>
 								</header>
 
-							<!-- Banner -->
-								<section id="banner">
-									<div class="content">
-										<header>
-											<h1>Cloud Computing Project By Team Inferno</h1>
-											<p>YouTube data analysis with implementation of Hadoop Map-Reduce environment on a private cloud</p>
-										</header>
-									</div>
-								</section>
+							<!-- Content -->
+								<section>
+									<header class="main">
+										<h1>Fetch YouTube Data</h1>
+									</header>
 
-						</div>
-					</div>
+									<!-- Content -->
+										<h2 id="content">Search</h2>
+										<p>Search is conducted via YouTube APIs. Search results are stack ranked by publish date (latest first)..</p>
+													<div class="row">
+															<div class="6u 12u$(small)">
+																<div class="select-wrapper">
+																	<select name="time-windows" id="timeWindow">
+																		<option value="any" selected="selected">Any Time</option>
+																		<option value="hour">Past Hour</option>
+																		<option value="3hours">Past 3 Hours</option>
+																		<option value="6hours">Past 6 Hours</option>
+																		<option value="9hours">Past 9 Hours</option>
+																		<option value="12hours">Past 12 Hours</option>
+																		<option value="24hours">Past 24 Hours</option>
+																		<option value="week">Past Week</option>
+																		<option value="30days">Past 30 days</option>
+																	</select>
+																</div>
+															</div>
+															<div class="6u$ 12u$(small)">
+																<input type="submit" id= "search-button" value="Fetch Data" class="special" />
+																<script>
+																   $('#search-button').click(function(){
+																	var timeframe = $('#timeWindow').val();
+																	console.log(timeframe);
+																	$.ajax({
+																		type: 'POST',
+																		url: '/click',
+																		data : timeframe,
+																		beforeSend : function(){
+																					//document.getElementById("myDIV").innerHTML = "Loading ...";
+																					console.log("Loading...")
+																					$("#ajax_loader").show();
+																					$("#server-response").hide();
+																					},  
+																		complete : function(validationResponse){
+																						$("#ajax_loader").hide();
+																						console.log("Response came back " + validationResponse.responseText);
+																						if(validationResponse.responseText =="success"){
+																							$("#server-response").show();
+																						}else{
+																							document.getElementById("server-response").style.color = "red";
+																							document.getElementById("server-response").innerHTML = "Some error occured !! Please try again";
+																							$("#server-response").show();
+																						}
+																					}
+																	});
+																	});
+																</script>
+															</div>
+															<div id='ajax_loader' style="position: fixed; left: 50%; top: 50%; display: none;">
+																<img src="https://www.drupal.org/files/issues/ajax-loader.gif"></img>
+															</div>
+															<div id ="server-response" style="display:none;"> 
+															<h3 style=" color: green;">Data Saved into file. Go to <a href="stats.html">Statistics</a> page to run Hadoop Map-Reduce algorithm</h3>
+															</div>
+													</div>		
+						
+
+									
+
+											</div>
+										</div>
+
+								</section>
 
 				<!-- Sidebar -->
 					<div id="sidebar">
@@ -103,15 +162,15 @@
 
 						</div>
 					</div>
-							
+
 			</div>
-							
+
 		<!-- Scripts -->
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/skel.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
 			<script src="assets/js/main.js"></script>
-			
+
 	</body>
 </html>

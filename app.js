@@ -1,23 +1,22 @@
 var express = require('express'),
         app = express(),
         server = require('http').createServer(app);
-var searchapi = require('./public/js/searchapi');		
+var searchapi = require('./controllers/searchapi');		
 var path = require('path');
 var fs = require('fs');
 var json2csv = require('json2csv');
 var url = require( "url" );
 var qs = require( "querystring" );
+var exec = require('child_process').exec;
+var child;
 var youtubeData = {};
+
+
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', function(req, res){
 	res.sendFile(__dirname + '/public');
 });
-
-app.get('/index.html', function(req, res){
-        res.sendFile(__dirname + '/public/index.html');
-});
-
 
 app.post('/click', function(req, res) {
 
@@ -38,6 +37,19 @@ app.post('/click', function(req, res) {
 				res.send("success");
 			});
   });
+});
+
+app.post('/analyze',function(req,res){
+	child = exec('node --version',(error, stdout, stderr) =>{
+		if (error) {
+			console.error(error);
+			return;
+		}
+		console.log('stdout: ' + stdout);
+		console.log('stderr: ' + stderr);
+		res.send("success");
+	});
+	
 });
 
 app.post('/endpoint',function(req,res){

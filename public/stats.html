@@ -6,7 +6,7 @@
 -->
 <html>
 	<head>
-		<title>YouTube Data Analysis by Team Inferno</title>
+		<title>Statistics - YouTube Data Analysis</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
@@ -34,14 +34,51 @@
 									</ul>
 								</header>
 
-							<!-- Banner -->
-								<section id="banner">
-									<div class="content">
-										<header>
-											<h1>Cloud Computing Project By Team Inferno</h1>
-											<p>YouTube data analysis with implementation of Hadoop Map-Reduce environment on a private cloud</p>
-										</header>
+							<!-- Content -->
+								<section>
+									<header class="main">
+										<h1>Statistics</h1>
+									</header>
+									<p>Click on Analyze data button to execute the Hadoop MapReduce algorithm which will return the statistics.</p>
+									<div class="col-md-4 text-center">
+									<button id="analyze" class="button big" type="button" value="Analyze Data" >Analyze Data</button>
+									<script>
+										//Ajax call to make a request to Run Hadoop Map-Reduce algorithm on the server				
+										$('#analyze').click(function(){
+											$.ajax({
+												type: 'POST',
+												url: '/analyze',
+												beforeSend : function(){
+															console.log("Analysing Results");
+															$("#ajax_loader").show();															
+															},  
+												complete : function(validationResponse){
+																$("#ajax_loader").hide();
+																console.log("Response came back " + validationResponse.responseText);
+																if(validationResponse.responseText =="success"){
+																	console.log("Successfully came back");
+																	$("#display-results").show();
+																	//document.getElementById("myDIV").innerHTML = "Command ran successfully";
+																}else{
+																	//document.getElementById("myDIV").innerHTML = "Some error occured !! Please try again";
+																}
+															}
+											});
+										});	
+									</script>
+									
 									</div>
+									<div id='ajax_loader' style="position: fixed; left: 50%; top: 50%; display: none;">
+											<img src="https://www.drupal.org/files/issues/ajax-loader.gif"></img>
+											<h3 style=" color: green;"> Analyzing Data </h3>
+									</div>
+									<br>
+									<div id="display-results" class="box" style="display:none;">
+														<p>Felis sagittis eget tempus primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent tincidunt felis sagittis eget. tempus euismod. Magna sed etiam ante ipsum primis in faucibus vestibulum.</p>
+									</div>
+									<span class="image main"><img src="images/pic11.jpg" alt="" /></span>
+									
+									<!-- Here you should add Analysed data results using D3.js -->
 								</section>
 
 						</div>
@@ -103,15 +140,15 @@
 
 						</div>
 					</div>
-							
+
 			</div>
-							
+
 		<!-- Scripts -->
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/skel.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
 			<script src="assets/js/main.js"></script>
-			
+
 	</body>
 </html>

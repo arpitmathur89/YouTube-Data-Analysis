@@ -1,1 +1,7 @@
+#node modules
+
 node_modules
+
+#Outputfile
+
+*.csv
