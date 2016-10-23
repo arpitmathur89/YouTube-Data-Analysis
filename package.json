@@ -1,0 +1,33 @@
+{
+  "name": "youtube-data-analysis",
+  "version": "1.0.0",
+  "description": "Required node modules to run this project",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.14.0",
+    "async": "^2.1.1",
+    "json2csv": "^3.7.0",
+    "youtube-api": "^2.0.4",
+    "csv-write-stream": "^2.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arpitmathur89/YouTube-Data-Analysis.git"
+  },
+  "keywords": [
+    "youtube-data-api",
+    "hadoop",
+    "map-reduce",
+    "cloud-computing"
+  ],
+  "author": "Arpit Mathur",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arpitmathur89/YouTube-Data-Analysis/issues"
+  },
+  "homepage": "https://github.com/arpitmathur89/YouTube-Data-Analysis#readme"
+}

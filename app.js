@@ -47,6 +47,42 @@ app.post('/analyze',function(req,res){
 		}
 		console.log('stdout: ' + stdout);
 		console.log('stderr: ' + stderr);
+		//Execute all command and then read tsv code
+		var resulttsv = fs.readFileSync('./myfile.tsv','utf8');
+		var headers = ["Category","Count"];
+		var topcateg = tsvJSON(resulttsv,headers);
+		var resultdata = {};
+		resultdata.response = "success";
+		resultdata.topcategory = topcateg;	
+				
+		// Function to convert TSV to JSON object
+		function tsvJSON(tsv,headers){
+					
+			  var lines=tsv.split("\n");
+			 
+			  var result = [];
+			 
+			  //headers=lines[0].split("\t");
+			 
+			  for(var i=0;i<lines.length;i++){
+			 
+				  var obj = {};
+				  lines[i] = lines[i].replace(/\"/g,"");
+				  var currentline=lines[i].split("\t");
+					
+				  for(var j=0;j<headers.length;j++){
+					  obj[headers[j]] = currentline[j];
+				  }
+			 
+				  result.push(obj);
+			 
+				}
+		
+			  //return result; //JavaScript object
+			  return JSON.stringify(result); //JSON
+		}
+			
+		console.log(JSON.stringify(resultdata));	
 		res.send("success");
 	});
 	
