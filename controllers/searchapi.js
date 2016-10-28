@@ -1,6 +1,7 @@
 var youtube = require('youtube-api');
 var async = require('async');
 var fs = require('fs');
+var os = require("os");
 var json2csv = require('json2csv');
 var finalResults = [];
 var finalResults2 = [];
@@ -25,6 +26,7 @@ exports.clickedSearchButton = function(time,done){
 	count = 0;
 	inputObject = {};
 	inputObject.inputTimeWindow = time;
+	fs.unlinkSync('arpitdata.csv');
     search(null,done);
 	
 }
@@ -47,7 +49,7 @@ function search(pageToken,mycall) {
 	var request = youtube.search.list(requestOptions,function(err,response){
 		if (err) return console.log("error");
 		var resultsArr = [];
-		//nextPageToken = response.nextPageToken;
+		nextPageToken = response.nextPageToken;
 		for(var x in response.items){
 			var playlistResult = new Object();
 			playlistResult.playlistId = response.items[x].id.playlistId;
@@ -75,11 +77,11 @@ function getVideoDetails(callback){
 	
 	var i =0 ;
 	async.whilst(
-	function(){ return i<5;},
+	function(){ return i<=20; },
 	function(cback){playlistInfoRecursive(finalResults[i].playlistId, null,i,finalResults2,callback,cback);
 	i++;},
 	function(err,done){
-		console.log("Ho gaya sab");
+		console.log("Saved in File");
 	}
 	);
 }
@@ -100,6 +102,9 @@ function playlistInfoRecursive(playlistId,pageToken,num,finalResults2,callback,c
 	  async.each(response.items,function(data){
 		  var videoResult = new Object();
 		  videoResult.videoId = data.snippet.resourceId.videoId;
+		 // console.log("Before : " + data.snippet.title);
+	  videoResult.title = data.snippet.title.replace(/["'\[\]\}\{\\]/g, "");
+		 // console.log("After : "+ videoResult.title);
 		  videoResult.channelId = data.snippet.channelId;
 		  videoIDString = videoIDString + videoResult.videoId + ",";
 		  videoArr.push(videoResult);
@@ -141,6 +146,13 @@ function playlistInfoRecursive(playlistId,pageToken,num,finalResults2,callback,c
 					count++; 	
 					finalResults2.push(videoArr[i]);
 					//
+					var ytData = videoArr[i];
+					var fields = ['title','videoId','categoryId' , 'category', 'duration', 'viewCount' , 'commentCount', 'channelId' ];
+					var csv = json2csv({ data: ytData, fields: fields, hasCSVColumnTitle: false });
+					fs.appendFile('arpitdata.csv', csv + os.EOL, function(err){
+						if (err) throw err;
+					});
+					//
 				}
 			  }
 		  });
@@ -148,12 +160,12 @@ function playlistInfoRecursive(playlistId,pageToken,num,finalResults2,callback,c
 	
 	  if(playlistNextPageToken){
 		  playlistInfoRecursive(playlistId,playlistNextPageToken,num,finalResults2,callback,cback);
-	  }else if(!playlistNextPageToken && (num == 4)){
+	  }else if(!playlistNextPageToken && (num == 19)){
 		  callback(finalResults2);
 		  cback();
 		  	 
 	  }else{
-		  console.log("Next playlist call :" + count);
+		  console.log("Num is : "+ num +" Next playlist call :" + count);
 		  cback();
 	  }	
 	  });  
@@ -163,12 +175,12 @@ function playlistInfoRecursive(playlistId,pageToken,num,finalResults2,callback,c
 }
 
 function displayfinalResults(){
-	var datajson = JSON.stringify(finalResults2);
-	var youtubeData = JSON.parse( datajson );
-	
+	//var datajson = JSON.stringify(finalResults2);
+	//var youtubeData = JSON.parse( datajson );
+	var youtubeData = finalResults2;
 	var fields = ['videoId','categoryId' , 'category', 'duration', 'viewCount' , 'commentCount', 'channelId' ];
-		var csv = json2csv({ data: youtubeData, fields: fields });
-		fs.writeFile('outputfile.csv', csv, function(err){
+		var csv = json2csv({ data: youtubeData, fields: fields, hasCSVColumnTitle: false });
+		fs.writeFile('data.csv', csv, function(err){
 			if (err) throw err;
 			  console.log('file saved');
 			});	
