@@ -1,0 +1,186 @@
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Statistics - YouTube Data Analysis</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+		<script src="//d3js.org/d3.v3.min.js"></script>
+		<script src="http://localhost:8080/socket.io/socket.io.js"></script>
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<script src ="assets/js/analyzehelper.js"></script>
+	</head>
+	<body>
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="index.html" class="logo"><strong>YouTube Data Analysis</strong> by Team Inferno</a>
+									<ul class="icons">
+										<li><a href="https://github.com/arpitmathur89/YouTube-Data-Analysis" target="_blank" class="icon fa-github"><span class="label">Github</span></a></li>
+									</ul>
+								</header>
+
+							<!-- Content -->
+								<section>
+									<header class="main">
+										<h1>Statistics</h1>
+									</header>
+									<p>Click on Analyze data button to execute the Hadoop MapReduce algorithm which will return the statistics.</p>
+									<div class="col-md-4 text-center">
+										<button id="analyze" class="button big" type="button" >Analyze Data</button>									
+									</div>
+									<div id='ajax_loader' style="position: fixed; left: 50%; top: 50%; display: none;">
+											<img src="images/ajax-loader-analyze.gif"></img>
+											<h3 style=" color: green;"> Analyzing Data </h3>
+									</div>
+									<br>
+									<div id="display-results"  style="display:none;">
+										<div class="row box">
+											
+											<div class="6u 12u$(small)" id='topcategchart'>
+																																		
+											</div>
+											
+											<div class="6u$ 12u$(small)">
+												<h3>Top 5 Categories</h3>
+												<table class = "table" >
+													<thead>
+													  <tr>
+														<th>#</th>
+														<th>Category</th>
+														<th>Total Videos</th>
+													  </tr>
+													</thead>
+													<tbody id="topcategtable">
+													</tbody>
+												</table>
+												
+											</div>
+											
+										</div>		
+										<div class="row box" >
+											<div class="12u 12u$(small)" id='topviewedchart'>
+											<h3>Top 5 Viewed Videos</h3>	
+											</div>
+										</div>
+										
+										<div class="row box">										
+											<div class="6u 12u$(small)">
+												<h3>Top 5 Viewed Videos</h3>
+												<table class = "table" >
+													<thead>
+													  <tr>
+														<th>#</th>
+														<th>Title</th>
+														<th>Views</th>
+													  </tr>
+													</thead>
+													<tbody id="topviewedtable">
+													</tbody>
+												</table>												
+											</div>
+											<div class="6u$ 12u$(small)">
+												<h3>Top 5 Uploaders</h3>
+												<table class = "table" >
+													<thead>
+													  <tr>
+														<th>#</th>
+														<th>Uploader ID</th>
+														<th>No. of Uploads</th>
+													  </tr>
+													</thead>
+													<tbody id="topuploadertable">
+													</tbody>
+												</table>
+											</div>
+											
+										</div>	
+									</div>
+									
+									<!-- Here you should add Analysed data results using D3.js -->
+								</section>
+
+						</div>
+					</div>
+
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+
+
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="index.html">Homepage</a></li>
+										<li><a href="stats.html">Statistics</a></li>
+										<li><a href="getdata.html">Get More Data</a></li>
+										<li><a href="projectdescription.html">Project Description</a></li>
+										<li><a href="aboutus.html">About US</a></li>
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+									<header class="major">
+										<h2>Get in touch</h2>
+									</header>
+									<div class="mini-posts">
+										<article>
+											<p> <b>Arpit Mathur</b> <br />Masters in Software Engineering <br/> Arizona State University</p>
+											
+											<ul class="contact">
+												<li class=" contact fa-envelope-o"><a href="#">arpit.mathur.1@asu.edu</a></li>
+											</ul>
+											
+										</article>
+										<article>
+											<p><b>Senthamil Sindhu</b><br /> Masters in Software Engineering<br />Arizona State University</p>
+											<ul class="contact">
+												<li class="fa-envelope-o"><a href="#"> sbalas24@asu.edu</a></li>
+											</ul>
+											
+										</article>
+										<article>
+											<p> <b>Vimarsh Deo</b><br /> Masters in Software Engineering<br />Arizona State University</p>
+											<ul class="contact">
+												<li class="fa-envelope-o"><a href="#"> vdeo1@asu.edu</a></li>
+											</ul>
+											
+										</article>
+									</div>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">&copy; Inferno. All rights reserved. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+								</footer>
+
+						</div>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
