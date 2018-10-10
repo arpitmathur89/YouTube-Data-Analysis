@@ -9,7 +9,7 @@ var count = 0;
 var publishAfterTime = '';
 var publishBeforeTime = '';
 
-var API_ACCESS_KEY = 'your-youtube-api-key';
+//var API_ACCESS_KEY = 'your-youtube-api-key';
 
 var nextPageToken;
 
