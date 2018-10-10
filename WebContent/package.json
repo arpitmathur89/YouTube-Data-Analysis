@@ -15,20 +15,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/arpitmathur89/YouTube-Data-Analysis.git"
-  },
+ 
   "keywords": [
     "youtube-data-api",
     "hadoop",
     "map-reduce",
     "cloud-computing"
-  ],
-  "author": "Arpit Mathur",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/arpitmathur89/YouTube-Data-Analysis/issues"
-  },
-  "homepage": "https://github.com/arpitmathur89/YouTube-Data-Analysis#readme"
+  ]
+  
 }

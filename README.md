@@ -2,6 +2,7 @@
 YouTube allows billions of people to connect, inform, and inspire others across the globe using originally
 created videos.
 
+
 In our Project we analyze the data to identify the top 5 categories in which the most number of videos are uploaded. The dataset is gathered using the YouTube API and stored in Hadoop Distributed File System(HDFS).
 MapReduce algorithm is applied to process the dataset and identify the video categories.
 
